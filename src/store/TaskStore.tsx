@@ -1,12 +1,5 @@
 import {makeAutoObservable} from "mobx";
-
-export interface ITask {
-    id: string
-    name: string
-    text: string
-    status: boolean
-    taskList: ITask[]
-}
+import {ITask} from "../types/types";
 
 export default class TaskStore {
     currentTask = {} as ITask
@@ -54,6 +47,18 @@ export default class TaskStore {
             this.setTaskList(updateTaskList)
 
     }
+
+    updateTaskListAfterDeletion(id: string) {
+        const updatingTaskList = this.deleteTask(id, this.taskList)
+        this.setTaskList(updatingTaskList)
+    }
+
+    deleteTask(id: string, taskList: ITask[]): ITask[] {
+        return taskList.filter(task => task.id !== id).map(task => {
+            return {...task, taskList: this.deleteTask(id, task.taskList)}
+        })
+    }
+
 
     addNewTask(id: string, taskList: ITask[], newTask: ITask): ITask[] {
         return taskList.map(task => {
