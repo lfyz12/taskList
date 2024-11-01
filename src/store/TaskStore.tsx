@@ -48,9 +48,43 @@ export default class TaskStore {
 
     }
 
-    updateTaskListAfterDeletion(id: string) {
-        const updatingTaskList = this.deleteTask(id, this.taskList)
+    updateTaskListAfterDeletion() {
+        const updatingTaskList = this.deleteTask(this.currentTask.id, this.taskList)
         this.setTaskList(updatingTaskList)
+    }
+
+    updateTaskListAfterUpdateName(id: string, name: string) {
+        if (name.trim() !== '' && name !== this.currentTask.name) {
+            const updatingTaskList = this.updateTaskName(id, this.taskList, name)
+            this.setTaskList(updatingTaskList)
+        }
+    }
+
+    updateTaskListAfterUpdateText(id: string, text: string) {
+        if (text.trim() !== '' && text !== this.currentTask.text) {
+            const updatingTaskList = this.updateTaskText(id, this.taskList, text)
+            this.setTaskList(updatingTaskList)
+        }
+    }
+
+    updateTaskName(id: string, taskList: ITask[], name: string): ITask[] {
+        return taskList.map(task => {
+            if (id === task.id) {
+                return {...task, name: name}
+            }
+
+            return {...task, taskList: this.updateTaskName(id, task.taskList, name)}
+        })
+    }
+
+    updateTaskText(id: string, taskList: ITask[], text: string): ITask[] {
+        return taskList.map(task => {
+            if (id === task.id) {
+                return {...task, text: text}
+            }
+
+            return {...task, taskList: this.updateTaskText(id, task.taskList, text)}
+        })
     }
 
     deleteTask(id: string, taskList: ITask[]): ITask[] {
