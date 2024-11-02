@@ -1,5 +1,6 @@
 import {makeAutoObservable} from "mobx";
 import {ITask} from "../types/types";
+import taskList from "../components/TaskList";
 
 export default class TaskStore {
     currentTask = {} as ITask
@@ -33,8 +34,7 @@ export default class TaskStore {
 
     createNewTask(name: string, text: string) {
             const newTask: ITask = {
-                id: this.currentTask.id ? `${this.currentTask.id}.${this.currentTask.taskList.length}` : `${this.taskList.length}`,
-                parentId: this.currentTask.id,
+                id: this.currentTask.id ? `${this.currentTask.id}.${this.currentTask.taskList.length + 1}` : `${this.taskList.length + 1}`,
                 name,
                 text,
                 status: false,
@@ -46,18 +46,31 @@ export default class TaskStore {
                 [...this.taskList, newTask]
 
             this.setTaskList(updateTaskList)
+            this.setCurrentTask({} as ITask)
+    }
 
+    renumberTasks(taskList: ITask[], parentId: string | null = null): ITask[] {
+        return taskList.map((task, index) => {
+            const newId = parentId ? `${parentId}.${index + 1}` : `${index + 1}`;
+            return {
+                ...task,
+                id: newId,
+                taskList: this.renumberTasks(task.taskList, newId) // Рекурсивно обновляем подзадачи
+            };
+        });
     }
 
     updateTaskListAfterDeletion() {
         const updatingTaskList = this.deleteTask(this.currentTask.id, this.taskList)
         this.setTaskList(updatingTaskList)
+        this.setCurrentTask({} as ITask)
     }
 
     updateTaskListAfterUpdateName(id: string, name: string) {
         if (name.trim() !== '' && name !== this.currentTask.name) {
             const updatingTaskList = this.updateTaskFields(id, this.taskList, {name})
             this.setTaskList(updatingTaskList)
+            this.setCurrentTask({} as ITask)
         }
     }
 
@@ -65,12 +78,14 @@ export default class TaskStore {
         if (text.trim() !== '' && text !== this.currentTask.text) {
             const updatingTaskList = this.updateTaskFields(id, this.taskList, {text})
             this.setTaskList(updatingTaskList)
+            this.setCurrentTask({} as ITask)
         }
     }
 
     updateTaskListAfterMark() {
         const updatingTaskList = this.markTask(this.currentTask.id, this.taskList)
         this.setTaskList(this.updateParentStatus(updatingTaskList))
+        this.setCurrentTask({} as ITask)
     }
 
     updateParentStatus(taskList: ITask[]): ITask[] {
@@ -119,9 +134,11 @@ export default class TaskStore {
     }
 
     deleteTask(id: string, taskList: ITask[]): ITask[] {
-        return taskList.filter(task => task.id !== id).map(task => {
+        const updatingTaskList = taskList.filter(task => task.id !== id).map(task => {
             return {...task, taskList: this.deleteTask(id, task.taskList)}
         })
+
+        return this.renumberTasks(updatingTaskList)
     }
 
 
