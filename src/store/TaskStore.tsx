@@ -34,6 +34,7 @@ export default class TaskStore {
     createNewTask(name: string, text: string) {
             const newTask: ITask = {
                 id: this.currentTask.id ? `${this.currentTask.id}.${this.currentTask.taskList.length}` : `${this.taskList.length}`,
+                parentId: this.currentTask.id,
                 name,
                 text,
                 status: false,
@@ -69,25 +70,41 @@ export default class TaskStore {
 
     updateTaskListAfterMark() {
         const updatingTaskList = this.markTask(this.currentTask.id, this.taskList)
-        this.setTaskList(updatingTaskList)
+        this.setTaskList(this.updateParentStatus(updatingTaskList))
     }
+
+    updateParentStatus(taskList: ITask[]): ITask[] {
+        return taskList.map(task => {
+            if (task.taskList.length > 0) {
+                const allSubtasksMarked = task.taskList.every(subTask => subTask.status);
+                return {
+                    ...task,
+                    status: allSubtasksMarked ? true : task.status,
+                    taskList: this.updateParentStatus(task.taskList)
+                };
+            }
+            return task;
+        });
+    }
+
 
     markTask(id: string, taskList: ITask[]): ITask[] {
         return taskList.map(task => {
             if (task.id === id) {
-                return {...task, status: true, taskList: this.markEveryTask(task.taskList)}
+                const newStatus = !task.status
+                return {...task, status: newStatus, taskList: this.markAllTask(task.taskList, newStatus)}
             }
 
             return {...task, taskList: this.markTask(id, task.taskList)}
         })
     }
 
-    markEveryTask(taskList: ITask[]): ITask[] {
+    markAllTask(taskList: ITask[], newStatus: boolean): ITask[] {
         return taskList.map(task => {
             if (task.taskList.length > 0) {
-                return {...task, status: true, taskList: this.markEveryTask(task.taskList)}
+                return {...task, status: newStatus, taskList: this.markAllTask(task.taskList, newStatus)}
             }
-            return {...task, status: true}
+            return {...task, status: newStatus}
         })
     }
 
