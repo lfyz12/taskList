@@ -67,6 +67,30 @@ export default class TaskStore {
         }
     }
 
+    updateTaskListAfterMark() {
+        const updatingTaskList = this.markTask(this.currentTask.id, this.taskList)
+        this.setTaskList(updatingTaskList)
+    }
+
+    markTask(id: string, taskList: ITask[]): ITask[] {
+        return taskList.map(task => {
+            if (task.id === id) {
+                return {...task, status: true, taskList: this.markEveryTask(task.taskList)}
+            }
+
+            return {...task, taskList: this.markTask(id, task.taskList)}
+        })
+    }
+
+    markEveryTask(taskList: ITask[]): ITask[] {
+        return taskList.map(task => {
+            if (task.taskList.length > 0) {
+                return {...task, status: true, taskList: this.markEveryTask(task.taskList)}
+            }
+            return {...task, status: true}
+        })
+    }
+
     updateTaskName(id: string, taskList: ITask[], name: string): ITask[] {
         return taskList.map(task => {
             if (id === task.id) {
