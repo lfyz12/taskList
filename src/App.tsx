@@ -1,7 +1,6 @@
 import React, {useContext} from 'react';
 import './App.css';
 import {Context} from "./index";
-import TaskList from "./components/TaskList";
 import CreateTaskForm from "./components/CreateTaskForm";
 import {observer} from "mobx-react-lite";
 import {BrowserRouter} from "react-router-dom";

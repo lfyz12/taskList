@@ -10,7 +10,7 @@ interface taskListProps {
 const TaskList: FC<taskListProps> = ({taskList}: taskListProps) => {
 
     return (
-        <div className="ms-2">
+        <div className="ms-2 w-full">
             {taskList.map(task => (
                 <TaskItem key={task.id} task={task}/>
             ))}

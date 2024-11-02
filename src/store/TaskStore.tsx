@@ -37,14 +37,7 @@ export default class TaskStore {
         this.currentTask = task
     }
 
-    getTaskById(id: string, taskList: ITask[]): ITask | undefined {
-        return taskList.find(task => {
-            if (task.id === id) {
-                return task
-            }
-            return this.getTaskById(id, task.taskList)
-        })
-    }
+
 
     createNewTask(name: string, text: string) {
             const newTask: ITask = {
@@ -81,7 +74,7 @@ export default class TaskStore {
     }
 
     updateTaskListAfterUpdateName(id: string, name: string) {
-        if (name.trim() !== '' && name !== this.currentTask.name) {
+        if (name && name.trim() !== '' && name !== this.currentTask.name) {
             const updatingTaskList = this.updateTaskFields(id, this.taskList, {name})
             this.setTaskList(updatingTaskList)
             this.setCurrentTask({} as ITask)
@@ -89,7 +82,7 @@ export default class TaskStore {
     }
 
     updateTaskListAfterUpdateText(id: string, text: string) {
-        if (text.trim() !== '' && text !== this.currentTask.text) {
+        if (text !== this.currentTask.text) {
             const updatingTaskList = this.updateTaskFields(id, this.taskList, {text})
             this.setTaskList(updatingTaskList)
             this.setCurrentTask({} as ITask)

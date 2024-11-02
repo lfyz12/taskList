@@ -15,16 +15,18 @@ const TaskContentWrapper = () => {
     }, [taskStore.currentTask, taskId]);
 
     const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setName(e.target.value);
-        taskStore.updateTaskListAfterUpdateName(taskId!, name)
+        const newName = e.target.value;
+        setName(newName);
+        taskStore.updateTaskListAfterUpdateName(taskId!, newName);
     };
 
+
     const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        setText(e.target.value);
-        if (text.trim() !== '') {
-            taskStore.updateTaskListAfterUpdateText(taskId!, text)
-        }
+        const newText = e.target.value;
+        setText(newText);
+        taskStore.updateTaskListAfterUpdateText(taskId!, newText);
     };
+
 
     return (
         <div className='w-full h-full flex flex-col'>
