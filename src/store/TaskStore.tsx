@@ -56,14 +56,14 @@ export default class TaskStore {
 
     updateTaskListAfterUpdateName(id: string, name: string) {
         if (name.trim() !== '' && name !== this.currentTask.name) {
-            const updatingTaskList = this.updateTaskName(id, this.taskList, name)
+            const updatingTaskList = this.updateTaskFields(id, this.taskList, {name})
             this.setTaskList(updatingTaskList)
         }
     }
 
     updateTaskListAfterUpdateText(id: string, text: string) {
         if (text.trim() !== '' && text !== this.currentTask.text) {
-            const updatingTaskList = this.updateTaskText(id, this.taskList, text)
+            const updatingTaskList = this.updateTaskFields(id, this.taskList, {text})
             this.setTaskList(updatingTaskList)
         }
     }
@@ -77,9 +77,10 @@ export default class TaskStore {
         return taskList.map(task => {
             if (task.taskList.length > 0) {
                 const allSubtasksMarked = task.taskList.every(subTask => subTask.status);
+
                 return {
                     ...task,
-                    status: allSubtasksMarked ? true : task.status,
+                    status: allSubtasksMarked,
                     taskList: this.updateParentStatus(task.taskList)
                 };
             }
@@ -108,24 +109,13 @@ export default class TaskStore {
         })
     }
 
-    updateTaskName(id: string, taskList: ITask[], name: string): ITask[] {
+    updateTaskFields(id: string, taskList: ITask[], updatedFields: Partial<ITask>): ITask[] {
         return taskList.map(task => {
             if (id === task.id) {
-                return {...task, name: name}
+                return { ...task, ...updatedFields };
             }
-
-            return {...task, taskList: this.updateTaskName(id, task.taskList, name)}
-        })
-    }
-
-    updateTaskText(id: string, taskList: ITask[], text: string): ITask[] {
-        return taskList.map(task => {
-            if (id === task.id) {
-                return {...task, text: text}
-            }
-
-            return {...task, taskList: this.updateTaskText(id, task.taskList, text)}
-        })
+            return { ...task, taskList: this.updateTaskFields(id, task.taskList, updatedFields) };
+        });
     }
 
     deleteTask(id: string, taskList: ITask[]): ITask[] {
