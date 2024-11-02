@@ -6,15 +6,15 @@ import taskList from "./TaskList";
 import {Context} from "../index";
 import CreateTaskForm from "./CreateTaskForm";
 import {observer} from "mobx-react-lite";
+import TaskContentWrapper from "./TaskContentWrapper";
 
 const AppRouter = () => {
-    const {taskStore} = useContext(Context)
-    console.log(taskStore.taskList)
+
     return (
         <Routes>
             <Route path={'/'} element={<Home/>}>
-                <Route path={'taskList'} element={<TaskList taskList={taskStore.taskList}/>}/>
                 <Route path={'new'} element={<CreateTaskForm/>}/>
+                <Route path={'taskItem/:taskId'} element={<TaskContentWrapper/>}/>
             </Route>
         </Routes>
     );

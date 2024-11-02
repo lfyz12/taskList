@@ -1,20 +1,38 @@
 import React, {useContext, useState} from 'react';
 import {Context} from "../index";
-import {Link} from "react-router-dom";
-import taskList from "./TaskList";
+import {useNavigate} from "react-router-dom";
 
 const CreateTaskForm = () => {
     const {taskStore} = useContext(Context)
     const [name, setName] = useState<string>('')
     const [text, setText] = useState<string>('')
+    const navigate = useNavigate()
     const createTask = () => {
         taskStore.createNewTask(name, text)
+        navigate('/')
     }
     return (
-        <div>
-            <input type={"text"} placeholder={'Название'} value={name} onChange={e => setName(e.target.value)}/>
-            <input type={"text"} placeholder={'Текст'} value={text} onChange={e => setText(e.target.value)}/>
-            <button onClick={createTask}>Создать</button>
+        <div className="p-6 bg-white rounded-lg shadow-md space-y-4 m-auto">
+            <input
+                type="text"
+                placeholder="Название"
+                value={name}
+                onChange={e => setName(e.target.value)}
+                className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <input
+                type="text"
+                placeholder="Текст"
+                value={text}
+                onChange={e => setText(e.target.value)}
+                className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <button
+                onClick={createTask}
+                className="w-full p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200"
+            >
+                Создать
+            </button>
         </div>
     );
 };

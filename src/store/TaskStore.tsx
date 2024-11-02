@@ -5,10 +5,15 @@ import taskList from "../components/TaskList";
 export default class TaskStore {
     currentTask = {} as ITask
     taskList = [] as ITask[]
+    orderedList: boolean = false
 
     constructor() {
         makeAutoObservable(this)
         this.loadTaskListFromLocalStorage()
+    }
+
+    toggleOrderedList() {
+        this.orderedList = !this.orderedList
     }
 
 
@@ -30,6 +35,15 @@ export default class TaskStore {
 
     setCurrentTask(task: ITask) {
         this.currentTask = task
+    }
+
+    getTaskById(id: string, taskList: ITask[]): ITask | undefined {
+        return taskList.find(task => {
+            if (task.id === id) {
+                return task
+            }
+            return this.getTaskById(id, task.taskList)
+        })
     }
 
     createNewTask(name: string, text: string) {

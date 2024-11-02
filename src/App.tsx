@@ -9,10 +9,9 @@ import AppRouter from "./components/AppRouter";
 
 function App() {
   const {taskStore} = useContext(Context)
-    console.log(taskStore.currentTask)
   return (
     <BrowserRouter>
-      <AppRouter/>
+        {taskStore.taskList.length > 0 ? <AppRouter/> : <CreateTaskForm/>}
     </BrowserRouter>
   );
 }

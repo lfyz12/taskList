@@ -2,6 +2,7 @@ import React, {FC} from 'react';
 import {ITask} from "../types/types";
 import TaskItem from "./TaskItem";
 import {observer} from "mobx-react-lite";
+import {taskStore} from "../index";
 
 interface taskListProps {
     taskList: ITask[]
@@ -9,11 +10,10 @@ interface taskListProps {
 const TaskList: FC<taskListProps> = ({taskList}: taskListProps) => {
 
     return (
-        <div className='me-2'>
-            {
-                taskList.map(task =>
-                <TaskItem task={task}/>)
-            }
+        <div className="ms-2">
+            {taskList.map(task => (
+                <TaskItem key={task.id} task={task}/>
+            ))}
         </div>
     );
 };
