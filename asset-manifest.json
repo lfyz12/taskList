@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.css": "/lfyz12/taskList.git/static/css/main.cdb9c14c.css",
-    "main.js": "/lfyz12/taskList.git/static/js/main.dee72b1e.js",
-    "index.html": "/lfyz12/taskList.git/index.html",
-    "main.cdb9c14c.css.map": "/lfyz12/taskList.git/static/css/main.cdb9c14c.css.map",
-    "main.dee72b1e.js.map": "/lfyz12/taskList.git/static/js/main.dee72b1e.js.map"
+    "main.css": "/taskList/static/css/main.cdb9c14c.css",
+    "main.js": "/taskList/static/js/main.dee72b1e.js",
+    "index.html": "/taskList/index.html",
+    "main.cdb9c14c.css.map": "/taskList/static/css/main.cdb9c14c.css.map",
+    "main.dee72b1e.js.map": "/taskList/static/js/main.dee72b1e.js.map"
   },
   "entrypoints": [
     "static/css/main.cdb9c14c.css",
