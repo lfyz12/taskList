@@ -27,7 +27,7 @@ cd taskList
 
 ### Развертывание на GitHub Pages
 
-Также этот проект доступен по адресу https://lfyz12.github.io/tasklist
+Также этот проект доступен по адресу https://lfyz12.github.io/taskList/
 
 ### Используемые технологии
 
