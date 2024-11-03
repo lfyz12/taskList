@@ -10,7 +10,7 @@ const AppRouter = () => {
 
     return (
         <Routes>
-            <Route path={'/taskList'} element={<Home/>}>
+            <Route path={'/'} element={<Home/>}>
                 <Route index element={<NotPickPage/>}/>
                 <Route path={'new'} element={<CreateTaskForm/>}/>
                 <Route path={'taskItem/:taskId'} element={<TaskContentWrapper/>}/>
