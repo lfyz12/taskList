@@ -9,7 +9,7 @@ const CreateTaskForm = () => {
     const navigate = useNavigate()
     const createTask = () => {
         taskStore.createNewTask(name, text)
-        navigate('/')
+        navigate('/taskList')
     }
 
     return (
