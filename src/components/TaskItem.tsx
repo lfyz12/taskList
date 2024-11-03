@@ -11,7 +11,6 @@ interface taskItemProps {
 const TaskItem: FC<taskItemProps> = ({task}: taskItemProps) => {
     const {taskStore} = useContext(Context)
     const [show, setShow] = useState<boolean>(false)
-    const navigate = useNavigate()
     const handleToggleShow = () => setShow(!show)
     const pickCurrentTask = (e: React.MouseEvent) => {
         e.stopPropagation()
