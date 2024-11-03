@@ -9,7 +9,7 @@ import AppRouter from "./components/AppRouter";
 function App() {
   const {taskStore} = useContext(Context)
   return (
-    <HashRouter basename='/taskList'>
+    <HashRouter>
         <AppRouter/>
     </HashRouter>
   );
