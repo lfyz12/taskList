@@ -31,7 +31,7 @@ const TaskItem: FC<taskItemProps> = ({task}: taskItemProps) => {
     }
     return (
         <div onClick={pickCurrentTask} className="w-full h-full flex flex-col items-center space-x-2 p-2">
-            <div className="w-full h-24 flex items-center space-x-2 p-2  border rounded-md">
+            <div className="w-full h-24 flex items-center space-x-2 p-2  border rounded-md relative">
                 <input
                     type="checkbox"
                     checked={task.status}
@@ -39,7 +39,7 @@ const TaskItem: FC<taskItemProps> = ({task}: taskItemProps) => {
                     className="h-5 w-5"
                 />
 
-                {taskStore.orderedList && <span className="mr-2">{task.id}</span>}
+                {taskStore.orderedList && <span className="mr-2 text-blue-500 absolute top-0 left-0 text-base">{task.id}</span>}
 
                 <Link to={`taskItem/${task.id}`} className="flex-grow text-blue-500 hover:underline">
                     {task.name}

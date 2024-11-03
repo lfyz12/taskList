@@ -30,6 +30,7 @@ const TaskContentWrapper = () => {
 
     return (
         <div className='w-full h-full flex flex-col'>
+
             <input type="text" value={name} onChange={handleNameChange}
                    className='text-4xl h-16 border-none outline-0 bg-transparent font-semibold mb-2'
                    placeholder='Название'
