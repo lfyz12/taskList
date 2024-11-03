@@ -15,6 +15,7 @@ const AppRouter = () => {
                 <Route path={'new'} element={<CreateTaskForm/>}/>
                 <Route path={'taskItem/:taskId'} element={<TaskContentWrapper/>}/>
             </Route>
+            <Route path='*' element={<Home/>}/>
         </Routes>
     );
 };
