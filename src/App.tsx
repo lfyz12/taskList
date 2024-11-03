@@ -10,7 +10,7 @@ function App() {
   const {taskStore} = useContext(Context)
   return (
     <BrowserRouter>
-        {taskStore.taskList.length > 0 ? <AppRouter/> : <CreateTaskForm/>}
+        <AppRouter/>
     </BrowserRouter>
   );
 }

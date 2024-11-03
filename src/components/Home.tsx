@@ -13,7 +13,7 @@ const Home = () => {
     return (
         <div className="flex w-screen h-max min-h-screen text-gray-800 text-lg font-medium bg-gray-50">
 
-            <div className="w-1/3 min-h-full p-4 bg-white shadow-md">
+            <div className="w-1/3 min-h-full max-h-screen overflow-x-hidden p-4 bg-white shadow-md overflow-y-auto">
                 <Link to="new">
                     <button
                         onClick={resetCurrentTask}
@@ -24,7 +24,7 @@ const Home = () => {
                 <TaskList taskList={taskStore.taskList}/>
             </div>
 
-            <div className="h-full w-2/3 p-6">
+            <div className="min-h-full w-2/3 p-6 overflow-hidden">
                 {taskStore.taskList.length === 0 ? <Outlet context='new'/> : <Outlet/>}
             </div>
         </div>

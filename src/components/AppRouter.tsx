@@ -1,18 +1,17 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {Route, Routes} from "react-router-dom";
-import TaskList from "./TaskList";
 import Home from "./Home";
-import taskList from "./TaskList";
-import {Context} from "../index";
 import CreateTaskForm from "./CreateTaskForm";
 import {observer} from "mobx-react-lite";
 import TaskContentWrapper from "./TaskContentWrapper";
+import NotPickPage from "./NotPickPage";
 
 const AppRouter = () => {
 
     return (
         <Routes>
             <Route path={'/'} element={<Home/>}>
+                <Route index element={<NotPickPage/>}/>
                 <Route path={'new'} element={<CreateTaskForm/>}/>
                 <Route path={'taskItem/:taskId'} element={<TaskContentWrapper/>}/>
             </Route>

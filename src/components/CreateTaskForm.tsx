@@ -11,28 +11,34 @@ const CreateTaskForm = () => {
         taskStore.createNewTask(name, text)
         navigate('/')
     }
+
     return (
-        <div className="p-6 bg-white rounded-lg shadow-md space-y-4 m-auto">
+        <div className="w-full h-full flex flex-col">
             <input
                 type="text"
-                placeholder="Название"
                 value={name}
                 onChange={e => setName(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="text-4xl h-16 border-none outline-0 bg-transparent font-semibold mb-2"
+                placeholder="Название"
             />
-            <input
-                type="text"
-                placeholder="Текст"
+            <hr/>
+
+            <textarea
                 value={text}
                 onChange={e => setText(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="text-lg font-medium mt-2 ms-2 w-full flex-grow p-2 border-none resize-none outline-none bg-transparent"
+                placeholder={`${name.trim() === '' ? 'Сначала напишите название задачи' : 'Напишите что хотите'}`}
+                readOnly={name.trim() === ''}
             />
-            <button
-                onClick={createTask}
-                className="w-full p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200"
-            >
-                Создать
-            </button>
+
+            {name && name.trim() !== '' ? (
+                <button
+                    onClick={createTask}
+                    className="bg-white rounded-lg h-10 border border-gray-300 mt-2"
+                >
+                    Добавить задачу
+                </button>
+            ) : null}
         </div>
     );
 };
