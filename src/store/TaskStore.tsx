@@ -98,17 +98,21 @@ export default class TaskStore {
     updateParentStatus(taskList: ITask[]): ITask[] {
         return taskList.map(task => {
             if (task.taskList.length > 0) {
-                const allSubtasksMarked = task.taskList.every(subTask => subTask.status);
+
+                const updatedSubTasks = this.updateParentStatus(task.taskList);
+
+                const allSubtasksMarked = updatedSubTasks.every(subTask => subTask.status);
 
                 return {
                     ...task,
                     status: allSubtasksMarked,
-                    taskList: this.updateParentStatus(task.taskList)
+                    taskList: updatedSubTasks
                 };
             }
             return task;
         });
     }
+
 
 
     markTask(id: string, taskList: ITask[]): ITask[] {
