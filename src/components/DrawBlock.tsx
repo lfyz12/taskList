@@ -42,22 +42,24 @@ const DrawBlock: FC<DrawBlockProps> = ({block, onUpdate}) => {
     }
   }, [block.drawing, isDark])
 
-  const getPos = (e: React.MouseEvent<HTMLCanvasElement>): {x: number; y: number} | null => {
+  const getPos = (e: React.PointerEvent<HTMLCanvasElement>): {x: number; y: number} | null => {
     const canvas = canvasRef.current
     if (!canvas) return null
     const rect = canvas.getBoundingClientRect()
     return {x: e.clientX - rect.left, y: e.clientY - rect.top}
   }
 
-  const startDraw = (e: React.MouseEvent<HTMLCanvasElement>) => {
+  const startDraw = (e: React.PointerEvent<HTMLCanvasElement>) => {
     const pos = getPos(e)
     if (!pos) return
+    e.preventDefault()
+    ;(e.target as HTMLElement).setPointerCapture(e.pointerId)
     setDrawing(true)
     lastPos.current = pos
     setHasDrawn(true)
   }
 
-  const draw = (e: React.MouseEvent<HTMLCanvasElement>) => {
+  const draw = (e: React.PointerEvent<HTMLCanvasElement>) => {
     if (!drawing) return
     const pos = getPos(e)
     if (!pos || !lastPos.current) return
@@ -73,7 +75,11 @@ const DrawBlock: FC<DrawBlockProps> = ({block, onUpdate}) => {
     lastPos.current = pos
   }
 
-  const stopDraw = () => {
+  const stopDraw = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    if (drawing) {
+      e.preventDefault()
+      ;(e.target as HTMLElement).releasePointerCapture(e.pointerId)
+    }
     setDrawing(false)
     lastPos.current = null
   }
@@ -119,11 +125,11 @@ const DrawBlock: FC<DrawBlockProps> = ({block, onUpdate}) => {
       </div>
       <canvas
         ref={canvasRef}
-        className='w-full h-48 rounded-apple cursor-crosshair border border-apple-gray-100 dark:border-apple-gray-700'
-        onMouseDown={startDraw}
-        onMouseMove={draw}
-        onMouseUp={stopDraw}
-        onMouseLeave={stopDraw}
+        className='w-full h-48 rounded-apple cursor-crosshair border border-apple-gray-100 dark:border-apple-gray-700 touch-none'
+        onPointerDown={startDraw}
+        onPointerMove={draw}
+        onPointerUp={stopDraw}
+        onPointerLeave={stopDraw}
       />
     </div>
   );

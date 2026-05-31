@@ -133,8 +133,8 @@ export default class TaskStore {
 
   // ── Task CRUD ──
 
-  createNewTask(name: string, text: string, blocks: IBlock[] = []): string {
-    const parentId = this.focusedTaskId
+  createNewTask(name: string, text: string, blocks: IBlock[] = [], forceRoot = false): string {
+    const parentId = forceRoot ? null : this.focusedTaskId
     const parent = parentId ? this.findTaskById(parentId) : null
     const siblings = parentId && parent ? parent.taskList : this.taskList
 
@@ -155,7 +155,9 @@ export default class TaskStore {
         : [...this.taskList, newTask]
     )
 
-    this.setFocusedTaskId(newTask.id)
+    if (!forceRoot) {
+      this.setFocusedTaskId(newTask.id)
+    }
     return newTask.id
   }
 

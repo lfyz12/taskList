@@ -1,6 +1,6 @@
 import React, {useContext, useState} from 'react';
 import {Context} from "../index";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useLocation} from "react-router-dom";
 import {IBlock, BlockType} from "../types/types";
 import TaskStore from "../store/TaskStore";
 import TextBlock from "./TextBlock";
@@ -22,6 +22,8 @@ const CreateTaskForm = () => {
   const [blocks, setBlocks] = useState<IBlock[]>([])
   const [menuOpen, setMenuOpen] = useState(false)
   const navigate = useNavigate()
+  const location = useLocation()
+  const forceRoot = (location.state as any)?.forceRoot === true
 
   const canSubmit = name.trim().length > 0
 
@@ -47,7 +49,7 @@ const CreateTaskForm = () => {
 
   const handleSubmit = () => {
     if (!canSubmit) return
-    const taskId = taskStore.createNewTask(name.trim(), text.trim(), blocks)
+    const taskId = taskStore.createNewTask(name.trim(), text.trim(), blocks, forceRoot)
     setName('')
     setText('')
     setBlocks([])

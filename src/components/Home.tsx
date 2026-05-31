@@ -71,6 +71,7 @@ const Home = () => {
               </button>
               <Link
                 to='new'
+                state={{forceRoot: true}}
                 onClick={closeSidebar}
                 className='w-8 h-8 md:w-7 md:h-7 flex items-center justify-center rounded-md text-apple-blue hover:bg-apple-blue/5 transition-all'
                 title={taskStore.t('app.newTask')}
@@ -100,6 +101,7 @@ const Home = () => {
               <p className='text-sm text-apple-gray-400 dark:text-apple-gray-500 mb-3'>{taskStore.t('app.noTasks')}</p>
               <Link
                 to='new'
+                state={{forceRoot: true}}
                 onClick={closeSidebar}
                 className='inline-flex items-center gap-1.5 text-xs font-medium text-apple-blue hover:text-apple-blue/80 transition-colors'
               >
