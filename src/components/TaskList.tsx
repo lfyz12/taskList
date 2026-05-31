@@ -2,20 +2,20 @@ import React, {FC} from 'react';
 import {ITask} from "../types/types";
 import TaskItem from "./TaskItem";
 import {observer} from "mobx-react-lite";
-import {taskStore} from "../index";
 
-interface taskListProps {
-    taskList: ITask[]
+interface TaskListProps {
+  tasks: ITask[]
+  depth?: number
 }
-const TaskList: FC<taskListProps> = ({taskList}: taskListProps) => {
 
-    return (
-        <div className="ms-2 w-full">
-            {taskList.map(task => (
-                <TaskItem key={task.id} task={task}/>
-            ))}
-        </div>
-    );
+const TaskList: FC<TaskListProps> = ({tasks, depth = 0}) => {
+  return (
+    <div className='flex flex-col gap-1'>
+      {tasks.map(task => (
+        <TaskItem key={task.id} task={task} depth={depth}/>
+      ))}
+    </div>
+  );
 };
 
 export default observer(TaskList);

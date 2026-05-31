@@ -7,17 +7,16 @@ import TaskContentWrapper from "./TaskContentWrapper";
 import NotPickPage from "./NotPickPage";
 
 const AppRouter = () => {
-
-    return (
-        <Routes>
-            <Route path={'/taskList'} element={<Home/>}>
-                <Route index element={<NotPickPage/>}/>
-                <Route path={'new'} element={<CreateTaskForm/>}/>
-                <Route path={'taskItem/:taskId'} element={<TaskContentWrapper/>}/>
-            </Route>
-            <Route path='*' element={<Home/>}/>
-        </Routes>
-    );
+  return (
+    <Routes>
+      <Route path={'/taskList'} element={<Home/>}>
+        <Route index element={<NotPickPage/>}/>
+        <Route path={'new'} element={<CreateTaskForm/>}/>
+        <Route path={'taskItem/:taskId'} element={<TaskContentWrapper/>}/>
+      </Route>
+      <Route path='*' element={<Home/>}/>
+    </Routes>
+  );
 };
 
 export default observer(AppRouter);
