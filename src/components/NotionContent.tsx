@@ -6,6 +6,17 @@ import TextBlock from "./TextBlock";
 import ImageBlock from "./ImageBlock";
 import TableBlock from "./TableBlock";
 import DrawBlock from "./DrawBlock";
+import AIAssistPopover, {AIAssistAction} from "./AIAssistPopover";
+import {
+  improveText,
+  makeStructured,
+  describeImage,
+  suggestCaption,
+  improveTableStructure,
+  explainTableData,
+  describeDrawing,
+  suggestImprovements,
+} from "../shared/api/ai";
 import TaskStore from "../store/TaskStore";
 
 interface NotionContentProps {
@@ -31,6 +42,7 @@ const NotionContent: React.FC<NotionContentProps> = ({taskId, blocks}) => {
   const {taskStore} = useContext(Context)
   const [menuOpen, setMenuOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
+  const apiKey = taskStore.aiApiKey
 
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
@@ -62,12 +74,117 @@ const NotionContent: React.FC<NotionContentProps> = ({taskId, blocks}) => {
     taskStore.deleteBlock(taskId, blockId)
   }
 
+  const insertTextBlock = (text: string) => {
+    const block: IBlock = {
+      id: TaskStore.genBlockId(),
+      type: 'text',
+      text,
+    }
+    taskStore.addBlock(taskId, block)
+  }
+
+  const getTextActions = (block: IBlock): AIAssistAction[] => {
+    if (!apiKey) return []
+    return [
+      {
+        id: 'improve',
+        label: taskStore.t('ai.improve'),
+        run: () => improveText(block.text || '', apiKey),
+        onApply: (result) => handleUpdateBlock(block.id, {text: result}),
+      },
+      {
+        id: 'structure',
+        label: taskStore.t('ai.structure'),
+        run: () => makeStructured(block.text || '', apiKey),
+        onApply: (result) => handleUpdateBlock(block.id, {text: result}),
+      },
+    ]
+  }
+
+  const getImageActions = (block: IBlock): AIAssistAction[] => {
+    if (!apiKey) return []
+    return [
+      {
+        id: 'describe',
+        label: taskStore.t('ai.describe'),
+        run: () => describeImage(block.dataUrl || '', apiKey),
+        onApply: (result) => insertTextBlock(result),
+      },
+      {
+        id: 'caption',
+        label: taskStore.t('ai.suggest') + ' caption',
+        run: () => suggestCaption(block.dataUrl || '', apiKey),
+        onApply: (result) => insertTextBlock(result),
+      },
+    ]
+  }
+
+  const getTableActions = (block: IBlock): AIAssistAction[] => {
+    if (!apiKey) return []
+    const tableJson = JSON.stringify(block.rows || [])
+    return [
+      {
+        id: 'improve',
+        label: taskStore.t('ai.improveTable'),
+        run: () => improveTableStructure(tableJson, apiKey),
+        onApply: (result) => {
+          try {
+            const parsed = JSON.parse(result)
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              handleUpdateBlock(block.id, {rows: parsed, colCount: parsed[0].length})
+            }
+          } catch {
+            handleUpdateBlock(block.id, {text: result})
+          }
+        },
+      },
+      {
+        id: 'explain',
+        label: taskStore.t('ai.explain'),
+        run: () => explainTableData(tableJson, apiKey),
+        onApply: (result) => insertTextBlock(result),
+      },
+    ]
+  }
+
+  const getDrawActions = (block: IBlock): AIAssistAction[] => {
+    if (!apiKey) return []
+    const drawingData = block.drawing
+    return [
+      {
+        id: 'describe',
+        label: taskStore.t('ai.describe') + ' drawing',
+        run: () => describeDrawing(drawingData, apiKey),
+        onApply: (result) => insertTextBlock(result),
+      },
+      {
+        id: 'suggest',
+        label: taskStore.t('ai.suggest'),
+        run: () => suggestImprovements(block.text || '', apiKey),
+        onApply: (result) => insertTextBlock(result),
+      },
+    ]
+  }
+
+  const renderAIActions = (block: IBlock) => {
+    let actions: AIAssistAction[] = []
+    switch (block.type) {
+      case 'text': actions = getTextActions(block); break
+      case 'image': actions = getImageActions(block); break
+      case 'table': actions = getTableActions(block); break
+      case 'draw': actions = getDrawActions(block); break
+    }
+    if (actions.length === 0) return null
+    return <AIAssistPopover actions={actions} t={taskStore.t.bind(taskStore)} />
+  }
+
   return (
     <div className='flex flex-col gap-2'>
       {blocks.map(block => (
         <div key={block.id} className='group relative'>
           <div className='rounded-apple border border-apple-gray-100/60 dark:border-apple-gray-700/60 hover:border-apple-gray-200 dark:hover:border-apple-gray-600 transition-colors bg-white dark:bg-apple-gray-800/60'>
-            <div className='absolute -top-2 -right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity'>
+            <div className='absolute -top-2 -right-2 z-10 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity'>
+              {renderAIActions(block)}
               <button
                 onClick={() => handleDeleteBlock(block.id)}
                 className='w-6 h-6 flex items-center justify-center rounded-full bg-white dark:bg-apple-gray-700 border border-apple-gray-200 dark:border-apple-gray-600 shadow-apple-sm dark:shadow-none text-apple-gray-400 dark:text-apple-gray-400 hover:text-apple-red hover:border-apple-red/30 transition-all cursor-pointer'

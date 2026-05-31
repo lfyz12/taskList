@@ -43,6 +43,22 @@ export type DictKey =
   | 'table.addRow'
   | 'table.deleteColumn'
   | 'table.deleteRow'
+  | 'ai.improve'
+  | 'ai.split'
+  | 'ai.processing'
+  | 'ai.apply'
+  | 'ai.cancel'
+  | 'ai.error'
+  | 'ai.noKey'
+  | 'ai.apiKey'
+  | 'ai.apiKeyPlaceholder'
+  | 'ai.apiKeyHint'
+  | 'ai.structure'
+  | 'ai.describe'
+  | 'ai.suggest'
+  | 'ai.explain'
+  | 'ai.improveTable'
+  | 'ai.assist'
 
 const dict: Record<Lang, Record<DictKey, string>> = {
   en: {
@@ -88,6 +104,22 @@ const dict: Record<Lang, Record<DictKey, string>> = {
     'table.addRow': 'Add row',
     'table.deleteColumn': 'Delete column',
     'table.deleteRow': 'Delete row',
+    'ai.improve': 'Improve text',
+    'ai.split': 'Split into subtasks',
+    'ai.processing': 'AI is thinking…',
+    'ai.apply': 'Apply',
+    'ai.cancel': 'Cancel',
+    'ai.error': 'AI request failed. Check your API key in Settings.',
+    'ai.noKey': 'Set AI API key in Settings',
+    'ai.apiKey': 'AI API Key',
+    'ai.apiKeyPlaceholder': 'Enter your Groq API key',
+    'ai.apiKeyHint': 'Get a free key at console.groq.com',
+    'ai.structure': 'Structure as list',
+    'ai.describe': 'Describe image',
+    'ai.suggest': 'Suggest improvements',
+    'ai.explain': 'Explain in plain language',
+    'ai.improveTable': 'Improve structure',
+    'ai.assist': 'AI assist',
   },
   ru: {
     'app.allTasks': 'Все задачи',
@@ -132,6 +164,22 @@ const dict: Record<Lang, Record<DictKey, string>> = {
     'table.addRow': 'Добавить строку',
     'table.deleteColumn': 'Удалить колонку',
     'table.deleteRow': 'Удалить строку',
+    'ai.improve': 'Улучшить текст',
+    'ai.split': 'Разбить на подзадачи',
+    'ai.processing': 'ИИ обрабатывает…',
+    'ai.apply': 'Применить',
+    'ai.cancel': 'Отмена',
+    'ai.error': 'Ошибка ИИ. Проверьте API-ключ в настройках.',
+    'ai.noKey': 'Укажите API-ключ в настройках',
+    'ai.apiKey': 'API-ключ ИИ',
+    'ai.apiKeyPlaceholder': 'Введите ваш Groq API-ключ',
+    'ai.apiKeyHint': 'Получить ключ: console.groq.com',
+    'ai.structure': 'Структурировать в список',
+    'ai.describe': 'Описать изображение',
+    'ai.suggest': 'Предложить улучшения',
+    'ai.explain': 'Объяснить простым языком',
+    'ai.improveTable': 'Улучшить структуру',
+    'ai.assist': 'AI помощь',
   },
   es: {
     'app.allTasks': 'Todas las tareas',
@@ -176,6 +224,22 @@ const dict: Record<Lang, Record<DictKey, string>> = {
     'table.addRow': 'Añadir fila',
     'table.deleteColumn': 'Eliminar columna',
     'table.deleteRow': 'Eliminar fila',
+    'ai.improve': 'Mejorar texto',
+    'ai.split': 'Dividir en subtareas',
+    'ai.processing': 'La IA está pensando…',
+    'ai.apply': 'Aplicar',
+    'ai.cancel': 'Cancelar',
+    'ai.error': 'Error de IA. Revisa tu clave API en Ajustes.',
+    'ai.noKey': 'Configura la clave API de IA en Ajustes',
+    'ai.apiKey': 'Clave API de IA',
+    'ai.apiKeyPlaceholder': 'Introduce tu clave de Groq API',
+    'ai.apiKeyHint': 'Obtén una clave gratis en console.groq.com',
+    'ai.structure': 'Estructurar como lista',
+    'ai.describe': 'Describir imagen',
+    'ai.suggest': 'Sugerir mejoras',
+    'ai.explain': 'Explicar en lenguaje simple',
+    'ai.improveTable': 'Mejorar estructura',
+    'ai.assist': 'Asistencia IA',
   },
   zh: {
     'app.allTasks': '所有任务',
@@ -220,6 +284,22 @@ const dict: Record<Lang, Record<DictKey, string>> = {
     'table.addRow': '添加行',
     'table.deleteColumn': '删除列',
     'table.deleteRow': '删除行',
+    'ai.improve': '改进文本',
+    'ai.split': '拆分为子任务',
+    'ai.processing': 'AI 正在思考…',
+    'ai.apply': '应用',
+    'ai.cancel': '取消',
+    'ai.error': 'AI 请求失败。请在设置中检查 API 密钥。',
+    'ai.noKey': '请在设置中配置 AI API 密钥',
+    'ai.apiKey': 'AI API 密钥',
+    'ai.apiKeyPlaceholder': '输入你的 Groq API 密钥',
+    'ai.apiKeyHint': '在 console.groq.com 免费获取密钥',
+    'ai.structure': '结构化为列表',
+    'ai.describe': '描述图片',
+    'ai.suggest': '建议改进',
+    'ai.explain': '用简单语言解释',
+    'ai.improveTable': '改进结构',
+    'ai.assist': 'AI 辅助',
   },
 }
 
