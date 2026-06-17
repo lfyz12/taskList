@@ -4,6 +4,8 @@ import {Context} from "../index";
 import TaskList from "./TaskList";
 import {observer} from "mobx-react-lite";
 import {useNavigate} from "react-router-dom";
+import {useSortable} from "@dnd-kit/sortable";
+import {CSS} from "@dnd-kit/utilities";
 
 interface TaskItemProps {
   task: ITask
@@ -16,6 +18,21 @@ const TaskItem: FC<TaskItemProps> = ({task, depth}) => {
   const [expanded, setExpanded] = useState(false)
   const isFocused = taskStore.focusedTaskId === task.id
   const hasChildren = task.taskList.length > 0
+
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({id: task.id})
+
+  const style: React.CSSProperties = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.3 : 1,
+  }
 
   const handleSelect = () => {
     taskStore.setFocusedTaskId(task.id)
@@ -49,12 +66,13 @@ const TaskItem: FC<TaskItemProps> = ({task, depth}) => {
   }
 
   return (
-    <div>
+    <div ref={setNodeRef} style={style}>
       <div
         onClick={handleSelect}
         className={`
-          group flex items-center gap-2.5 px-3 py-3 lg:py-2.5 rounded-apple cursor-default
+          group flex items-center gap-1 px-3 py-3 lg:py-2.5 rounded-apple
           transition-all duration-150 select-none min-h-[44px] lg:min-h-0
+          ${isDragging ? 'shadow-apple-md ring-1 ring-apple-blue/20' : ''}
           ${isFocused
             ? 'bg-apple-blue/8 shadow-apple-sm'
             : 'hover:bg-apple-gray-50 dark:hover:bg-apple-gray-700/50'
@@ -62,6 +80,23 @@ const TaskItem: FC<TaskItemProps> = ({task, depth}) => {
         `}
         style={{paddingLeft: `${Math.min(12 + depth * 14, 40)}px`}}
       >
+
+        {/* Drag handle — only this triggers DnD */}
+        <button
+          {...attributes}
+          {...listeners}
+          className='shrink-0 flex items-center justify-center w-5 h-6 lg:w-4 lg:h-5 rounded text-apple-gray-300 dark:text-apple-gray-600 opacity-0 group-hover:opacity-100 hover:text-apple-gray-500 dark:hover:text-apple-gray-400 hover:bg-apple-gray-100 dark:hover:bg-apple-gray-700 transition-all cursor-grab active:cursor-grabbing -ml-0.5'
+          title='Drag to reorder'
+        >
+          <svg className='w-3.5 h-3.5 lg:w-3 lg:h-3' fill='currentColor' viewBox='0 0 24 24'>
+            <circle cx='9' cy='5' r='1.5'/>
+            <circle cx='15' cy='5' r='1.5'/>
+            <circle cx='9' cy='12' r='1.5'/>
+            <circle cx='15' cy='12' r='1.5'/>
+            <circle cx='9' cy='19' r='1.5'/>
+            <circle cx='15' cy='19' r='1.5'/>
+          </svg>
+        </button>
 
         {/* Expand indicator */}
         <button
@@ -109,7 +144,7 @@ const TaskItem: FC<TaskItemProps> = ({task, depth}) => {
           onClick={handleOpen}
           className={`
             flex-1 min-w-0 truncate transition-all duration-150 cursor-pointer
-            text-sm lg:text-sm
+            text-sm lg:text-sm ml-1
             ${task.status
               ? 'text-apple-gray-400 dark:text-apple-gray-500 line-through'
               : isFocused

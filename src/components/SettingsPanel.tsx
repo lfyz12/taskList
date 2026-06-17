@@ -96,6 +96,9 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({onClose}) => {
           <p className='text-[11px] font-semibold text-apple-gray-400 dark:text-apple-gray-300 uppercase tracking-wider'>
             {taskStore.t('ai.apiKey')}
           </p>
+          <span className='ml-auto text-[9px] font-medium text-apple-gray-400 dark:text-apple-gray-500 bg-apple-gray-100 dark:bg-apple-gray-700 px-1.5 py-0.5 rounded-full'>
+            {taskStore.t('ai.comingSoon')}
+          </span>
         </div>
         <input
           type='password'

@@ -1,18 +1,51 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useState, useCallback} from 'react';
 import {Link, Outlet} from "react-router-dom";
 import {observer} from "mobx-react-lite";
+import {
+  DndContext, DragEndEvent, DragStartEvent, DragOverlay,
+  useSensor, useSensors, PointerSensor
+} from "@dnd-kit/core";
 import TaskList from "./TaskList";
 import {Context} from "../index";
 import SettingsPanel from "./SettingsPanel";
+import SearchInput from "./SearchInput";
+import logoDark from "../assets/logoDark.png";
 
 const Home = () => {
   const {taskStore} = useContext(Context)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [activeDragId, setActiveDragId] = useState<string | null>(null)
   const hasTasks = taskStore.taskList.length > 0
+  const filtered = taskStore.filteredTasks
+  const hasFilteredTasks = filtered.length > 0
+  const isFiltered = taskStore.searchQuery.trim().length > 0
   const selectedTask = taskStore.focusedTask
 
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: { distance: 8 },
+    }),
+  )
+
   const closeSidebar = () => setSidebarOpen(false)
+
+  const handleDragStart = useCallback((event: DragStartEvent) => {
+    setActiveDragId(event.active.id as string)
+  }, [])
+
+  const handleDragEnd = useCallback((event: DragEndEvent) => {
+    setActiveDragId(null)
+    const {active, over} = event
+    if (!over || active.id === over.id) return
+    taskStore.reorderTask(active.id as string, over.id as string)
+  }, [taskStore])
+
+  const handleDragCancel = useCallback(() => {
+    setActiveDragId(null)
+  }, [])
+
+  const draggedTask = activeDragId ? taskStore.findTaskById(activeDragId) : null
 
   return (
     <div className='flex w-screen h-screen bg-apple-gray-50 dark:bg-apple-gray-900 overflow-hidden'>
@@ -48,9 +81,16 @@ const Home = () => {
                 </svg>
               </button>
               <div>
-                <h1 className='text-sm font-semibold text-apple-gray-900 dark:text-apple-gray-100'>
-                  {taskStore.t('app.allTasks')}
-                </h1>
+                <div className='flex items-center gap-2.5'>
+                  <img
+                    src={logoDark}
+                    alt='Focus logo'
+                    className='h-7 w-auto shrink-0'
+                  />
+                  <h1 className='text-sm font-semibold text-apple-gray-900 dark:text-apple-gray-100'>
+                    {taskStore.t('app.allTasks')}
+                  </h1>
+                </div>
                 {selectedTask && (
                   <p className='text-xs text-apple-blue mt-0.5 truncate max-w-[160px] md:max-w-[200px]'>
                     {selectedTask.name}
@@ -85,17 +125,49 @@ const Home = () => {
           {settingsOpen && <SettingsPanel onClose={() => setSettingsOpen(false)}/>}
         </div>
 
+        {/* Search */}
+        <div className='shrink-0 px-4 md:px-5 pt-3 pb-3'>
+          <SearchInput />
+        </div>
+
         {/* Task count */}
-        <div className='shrink-0 px-4 md:px-5 py-3 border-b border-apple-gray-100 dark:border-apple-gray-700'>
+        <div className='shrink-0 px-4 md:px-5 py-2.5 border-t border-apple-gray-100 dark:border-apple-gray-700'>
           <span className='text-xs font-medium text-apple-gray-400 dark:text-apple-gray-300 uppercase tracking-wider'>
-            {taskStore.taskList.length} {taskStore.taskList.length === 1 ? taskStore.t('app.task') : taskStore.t('app.tasks')}
+            {filtered.length > 0
+              ? `${filtered.length} ${filtered.length === 1 ? taskStore.t('app.task') : taskStore.t('app.tasks')}`
+              : taskStore.t('app.noTasks')
+            }
           </span>
         </div>
 
         {/* Task list */}
         <div className='flex-1 overflow-y-auto px-3 py-3'>
           {hasTasks ? (
-            <TaskList tasks={taskStore.taskList} depth={0}/>
+            <DndContext
+              sensors={sensors}
+              onDragStart={handleDragStart}
+              onDragEnd={handleDragEnd}
+              onDragCancel={handleDragCancel}
+            >
+              {hasFilteredTasks ? (
+                <TaskList tasks={filtered} depth={0}/>
+              ) : (
+                <div className='flex flex-col items-center justify-center h-40 text-center px-6'>
+                  <p className='text-sm text-apple-gray-400 dark:text-apple-gray-500'>
+                    {isFiltered ? taskStore.t('search.noResults') : taskStore.t('app.noTasks')}
+                  </p>
+                </div>
+              )}
+              <DragOverlay dropAnimation={null}>
+                {draggedTask && (
+                  <div className='flex items-center gap-2.5 px-3 py-2.5 rounded-apple bg-white dark:bg-apple-gray-700 shadow-apple-lg border border-apple-gray-100 dark:border-apple-gray-600 max-w-[300px]'>
+                    <span className='flex-1 min-w-0 truncate text-sm font-medium text-apple-gray-700 dark:text-apple-gray-300'>
+                      {draggedTask.name}
+                    </span>
+                  </div>
+                )}
+              </DragOverlay>
+            </DndContext>
           ) : (
             <div className='flex flex-col items-center justify-center h-40 text-center px-6'>
               <p className='text-sm text-apple-gray-400 dark:text-apple-gray-500 mb-3'>{taskStore.t('app.noTasks')}</p>

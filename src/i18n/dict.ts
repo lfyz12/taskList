@@ -59,6 +59,12 @@ export type DictKey =
   | 'ai.explain'
   | 'ai.improveTable'
   | 'ai.assist'
+  | 'ai.comingSoon'
+  | 'search.placeholder'
+  | 'search.noResults'
+  | 'filter.all'
+  | 'filter.active'
+  | 'filter.completed'
 
 const dict: Record<Lang, Record<DictKey, string>> = {
   en: {
@@ -120,6 +126,12 @@ const dict: Record<Lang, Record<DictKey, string>> = {
     'ai.explain': 'Explain in plain language',
     'ai.improveTable': 'Improve structure',
     'ai.assist': 'AI assist',
+    'ai.comingSoon': 'Coming soon',
+    'search.placeholder': 'Search tasks\u2026',
+    'search.noResults': 'Nothing found',
+    'filter.all': 'All',
+    'filter.active': 'Active',
+    'filter.completed': 'Completed',
   },
   ru: {
     'app.allTasks': 'Все задачи',
@@ -180,6 +192,12 @@ const dict: Record<Lang, Record<DictKey, string>> = {
     'ai.explain': 'Объяснить простым языком',
     'ai.improveTable': 'Улучшить структуру',
     'ai.assist': 'AI помощь',
+    'ai.comingSoon': 'Скоро добавим',
+    'search.placeholder': 'Поиск задач\u2026',
+    'search.noResults': 'Ничего не найдено',
+    'filter.all': 'Все',
+    'filter.active': 'Активные',
+    'filter.completed': 'Завершённые',
   },
   es: {
     'app.allTasks': 'Todas las tareas',
@@ -240,6 +258,12 @@ const dict: Record<Lang, Record<DictKey, string>> = {
     'ai.explain': 'Explicar en lenguaje simple',
     'ai.improveTable': 'Mejorar estructura',
     'ai.assist': 'Asistencia IA',
+    'ai.comingSoon': 'Próximamente',
+    'search.placeholder': 'Buscar tareas\u2026',
+    'search.noResults': 'No se encontraron resultados',
+    'filter.all': 'Todas',
+    'filter.active': 'Activas',
+    'filter.completed': 'Completadas',
   },
   zh: {
     'app.allTasks': '所有任务',
@@ -300,6 +324,12 @@ const dict: Record<Lang, Record<DictKey, string>> = {
     'ai.explain': '用简单语言解释',
     'ai.improveTable': '改进结构',
     'ai.assist': 'AI 辅助',
+    'ai.comingSoon': '即将推出',
+    'search.placeholder': '搜索任务\u2026',
+    'search.noResults': '未找到结果',
+    'filter.all': '全部',
+    'filter.active': '进行中',
+    'filter.completed': '已完成',
   },
 }
 

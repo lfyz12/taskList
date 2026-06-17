@@ -11,6 +11,7 @@ export default class TaskStore {
   theme: 'light' | 'dark' = 'light'
   language: Lang = 'en'
   aiApiKey: string = ''
+  searchQuery: string = ''
 
   private saveTimer: ReturnType<typeof setTimeout> | null = null
   private readonly SAVE_DELAY = 500
@@ -39,6 +40,10 @@ export default class TaskStore {
     localStorage.setItem('tasklist_ai_key', key)
   }
 
+  setSearchQuery(query: string) {
+    this.searchQuery = query
+  }
+
   toggleTheme() {
     this.setTheme(this.theme === 'light' ? 'dark' : 'light')
   }
@@ -65,6 +70,59 @@ export default class TaskStore {
   get activeChildren(): ITask[] {
     if (!this.focusedTask) return this.taskList
     return this.focusedTask.taskList
+  }
+
+  get filteredTasks(): ITask[] {
+    if (this.searchQuery.trim()) {
+      const q = this.searchQuery.toLowerCase().trim()
+      return this.filterBySearch(this.taskList, q)
+    }
+    return this.taskList
+  }
+
+  private filterBySearch(list: ITask[], q: string): ITask[] {
+    return list
+      .filter(task => {
+        const match = task.name.toLowerCase().includes(q)
+        const filteredChildren = this.filterBySearch(task.taskList, q)
+        return match || filteredChildren.length > 0
+      })
+      .map(task => ({
+        ...task,
+        taskList: this.filterBySearch(task.taskList, q),
+      }))
+  }
+
+  reorderTask(taskId: string, overId: string) {
+    if (taskId === overId) return
+
+    const moveParentId = this.getParentId(taskId)
+    const overParentId = this.getParentId(overId)
+    if (moveParentId !== overParentId) return
+
+    const moveParent = moveParentId ? this.findTaskById(moveParentId) : null
+    const siblings = moveParent ? [...moveParent.taskList] : [...this.taskList]
+
+    const oldIndex = siblings.findIndex(t => t.id === taskId)
+    const newIndex = siblings.findIndex(t => t.id === overId)
+    if (oldIndex === -1 || newIndex === -1) return
+
+    const [removed] = siblings.splice(oldIndex, 1)
+    siblings.splice(newIndex, 0, removed)
+
+    const renumbered = this.renumberTasks(siblings, moveParentId)
+
+    if (moveParentId) {
+      this.taskList = this.updateFields(moveParentId, this.taskList, {taskList: renumbered})
+    } else {
+      this.taskList = renumbered
+    }
+    this.scheduleSave()
+  }
+
+  private getParentId(taskId: string): string | null {
+    const lastDot = taskId.lastIndexOf('.')
+    return lastDot === -1 ? null : taskId.slice(0, lastDot)
   }
 
   // ── Persistence ──
@@ -260,6 +318,19 @@ export default class TaskStore {
     const task = this.findTaskById(taskId)
     if (!task) return
     const blocks = (task.blocks || []).filter(b => b.id !== blockId)
+    this.updateTask(taskId, {blocks})
+  }
+
+  reorderBlock(taskId: string, blockId: string, overBlockId: string) {
+    if (blockId === overBlockId) return
+    const task = this.findTaskById(taskId)
+    if (!task) return
+    const blocks = [...(task.blocks || [])]
+    const oldIndex = blocks.findIndex(b => b.id === blockId)
+    const newIndex = blocks.findIndex(b => b.id === overBlockId)
+    if (oldIndex === -1 || newIndex === -1) return
+    const [removed] = blocks.splice(oldIndex, 1)
+    blocks.splice(newIndex, 0, removed)
     this.updateTask(taskId, {blocks})
   }
 
