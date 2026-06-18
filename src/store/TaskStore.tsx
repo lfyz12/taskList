@@ -142,7 +142,6 @@ export default class TaskStore {
     this.scheduleSave()
   }
 
-  // ── Focus / navigation ──
 
   setFocusedTaskId(id: string | null) {
     this.focusedTaskId = id
@@ -158,7 +157,6 @@ export default class TaskStore {
     }
   }
 
-  // ── Lookup helpers ──
 
   findTaskById(id: string, list: ITask[] = this.taskList): ITask | null {
     for (const task of list) {
@@ -178,7 +176,6 @@ export default class TaskStore {
     return []
   }
 
-  // ── Task CRUD ──
 
   createNewTask(name: string, text: string, blocks: IBlock[] = [], forceRoot = false): string {
     const parentId = forceRoot ? null : this.focusedTaskId
@@ -285,7 +282,6 @@ export default class TaskStore {
     })
   }
 
-  // ── Block CRUD ──
 
   addBlock(taskId: string, block: IBlock) {
     const task = this.findTaskById(taskId)
