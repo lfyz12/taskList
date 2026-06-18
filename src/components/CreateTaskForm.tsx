@@ -87,7 +87,6 @@ const CreateTaskForm = () => {
           readOnly={!name.trim()}
         />
 
-        {/* Blocks */}
         <div className='h-px bg-apple-gray-100 dark:bg-apple-gray-700 my-4 md:my-5'/>
         <span className='text-[11px] font-semibold text-apple-gray-400 dark:text-apple-gray-500 uppercase tracking-wider mb-3 block'>{taskStore.t('task.blocks')}</span>
 
@@ -116,7 +115,6 @@ const CreateTaskForm = () => {
             </div>
           ))}
 
-          {/* Add block toolbar */}
           <div className='relative'>
             {menuOpen && (
               <div className='absolute bottom-full left-0 mb-2 bg-white dark:bg-apple-gray-800 rounded-apple-lg shadow-apple-lg border border-apple-gray-100 dark:border-apple-gray-700 p-1.5 z-10 min-w-[180px]'>

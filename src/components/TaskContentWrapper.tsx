@@ -23,7 +23,6 @@ const TaskContentWrapper = () => {
       setName('')
       setText('')
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [taskId])
 
   const handleSaveName = useCallback(() => {

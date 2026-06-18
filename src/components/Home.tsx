@@ -50,7 +50,6 @@ const Home = () => {
   return (
     <div className='flex w-screen h-screen bg-apple-gray-50 dark:bg-apple-gray-900 overflow-hidden'>
 
-      {/* ── Backdrop (mobile only) ── */}
       {sidebarOpen && (
         <div
           className='fixed inset-0 z-30 bg-black/30 lg:hidden'
@@ -58,7 +57,6 @@ const Home = () => {
         />
       )}
 
-      {/* ── Sidebar ── */}
       <aside className={`
         fixed lg:relative inset-y-0 left-0 z-40
         w-[85vw] max-w-[360px] lg:w-[340px] lg:min-w-[340px]
@@ -68,7 +66,6 @@ const Home = () => {
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
 
-        {/* Header */}
         <div className='shrink-0 px-4 md:px-5 pt-4 md:pt-5 pb-3 border-b border-apple-gray-100 dark:border-apple-gray-700 relative'>
           <div className='flex items-center justify-between'>
             <div className='flex items-center gap-3'>
@@ -125,12 +122,10 @@ const Home = () => {
           {settingsOpen && <SettingsPanel onClose={() => setSettingsOpen(false)}/>}
         </div>
 
-        {/* Search */}
         <div className='shrink-0 px-4 md:px-5 pt-3 pb-3'>
           <SearchInput />
         </div>
 
-        {/* Task count */}
         <div className='shrink-0 px-4 md:px-5 py-2.5 border-t border-apple-gray-100 dark:border-apple-gray-700'>
           <span className='text-xs font-medium text-apple-gray-400 dark:text-apple-gray-300 uppercase tracking-wider'>
             {filtered.length > 0
@@ -140,7 +135,6 @@ const Home = () => {
           </span>
         </div>
 
-        {/* Task list */}
         <div className='flex-1 overflow-y-auto px-3 py-3'>
           {hasTasks ? (
             <DndContext
@@ -188,9 +182,7 @@ const Home = () => {
 
       </aside>
 
-      {/* ── Content area ── */}
       <main className='flex-1 h-full overflow-y-auto bg-apple-gray-50 dark:bg-apple-gray-900 relative'>
-        {/* Mobile menu button — shown when sidebar is closed */}
         {!sidebarOpen && (
           <button
             onClick={() => setSidebarOpen(true)}

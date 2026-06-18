@@ -10,7 +10,6 @@ export default class TaskStore {
   taskList: ITask[] = []
   theme: 'light' | 'dark' = 'light'
   language: Lang = 'en'
-  aiApiKey: string = ''
   searchQuery: string = ''
 
   private saveTimer: ReturnType<typeof setTimeout> | null = null
@@ -19,9 +18,6 @@ export default class TaskStore {
   constructor() {
     makeAutoObservable(this)
     this.loadFromLocalStorage()
-    if (!this.aiApiKey && typeof process !== 'undefined' && (process as any).env?.REACT_APP_GROQ_API_KEY) {
-      this.aiApiKey = (process as any).env.REACT_APP_GROQ_API_KEY
-    }
     this.applyTheme()
   }
 
@@ -33,11 +29,6 @@ export default class TaskStore {
     this.theme = theme
     this.applyTheme()
     localStorage.setItem('tasklist_theme', theme)
-  }
-
-  setAiApiKey(key: string) {
-    this.aiApiKey = key
-    localStorage.setItem('tasklist_ai_key', key)
   }
 
   setSearchQuery(query: string) {
@@ -125,7 +116,6 @@ export default class TaskStore {
     return lastDot === -1 ? null : taskId.slice(0, lastDot)
   }
 
-  // ── Persistence ──
 
   private loadFromLocalStorage() {
     try {
@@ -136,8 +126,7 @@ export default class TaskStore {
     if (savedTheme === 'light' || savedTheme === 'dark') this.theme = savedTheme
     const savedLang = localStorage.getItem('tasklist_lang')
     if (savedLang === 'en' || savedLang === 'ru' || savedLang === 'es' || savedLang === 'zh') this.language = savedLang
-    const savedAiKey = localStorage.getItem('tasklist_ai_key')
-    if (savedAiKey) this.aiApiKey = savedAiKey
+
   }
 
   private scheduleSave() {

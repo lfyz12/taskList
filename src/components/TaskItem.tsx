@@ -81,7 +81,6 @@ const TaskItem: FC<TaskItemProps> = ({task, depth}) => {
         style={{paddingLeft: `${Math.min(12 + depth * 14, 40)}px`}}
       >
 
-        {/* Drag handle — only this triggers DnD */}
         <button
           {...attributes}
           {...listeners}
@@ -98,7 +97,6 @@ const TaskItem: FC<TaskItemProps> = ({task, depth}) => {
           </svg>
         </button>
 
-        {/* Expand indicator */}
         <button
           onClick={handleExpand}
           className={`
@@ -119,7 +117,6 @@ const TaskItem: FC<TaskItemProps> = ({task, depth}) => {
           </svg>
         </button>
 
-        {/* Checkbox */}
         <button
           onClick={handleCheck}
           className={`
@@ -139,7 +136,6 @@ const TaskItem: FC<TaskItemProps> = ({task, depth}) => {
           )}
         </button>
 
-        {/* Name */}
         <span
           onClick={handleOpen}
           className={`
@@ -156,14 +152,12 @@ const TaskItem: FC<TaskItemProps> = ({task, depth}) => {
           {task.name}
         </span>
 
-        {/* Subtask count badge */}
         {hasChildren && (
           <span className='shrink-0 text-xs text-apple-gray-400 dark:text-apple-gray-500 font-medium tabular-nums'>
             {task.taskList.length}
           </span>
         )}
 
-        {/* Actions — always visible on mobile, hover-only on desktop */}
         <div className='shrink-0 flex items-center gap-0.5 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-150'>
           <button
             onClick={handleOpen}
